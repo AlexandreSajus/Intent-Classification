@@ -1,0 +1,9 @@
+datasets
+ipykernel
+wandb
+nltk
+keras
+tensorflow==2.4.0
+torch
+matplotlib
+ipykernel

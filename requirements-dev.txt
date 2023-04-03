@@ -1,0 +1,10 @@
+pytest
+pytest-cov
+pytest-mock
+pytest-check
+pytest-pspec
+pytest-qt
+pyautogui
+pylint>=2.12
+pylint-pytest
+black

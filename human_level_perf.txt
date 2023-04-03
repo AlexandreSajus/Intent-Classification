@@ -1,0 +1,174 @@
+HUMAN LEVEL PERFORMANCE MEASUREMENT
+
+This is the log of a human level performance measurement on the intent classification task.
+- dataset: hugging-face silicone maptask
+
+The experiment was done by guessing 24 labels for 24 utterances by only using for reference 3 labelled examples per label.
+
+The human accuracy is at 54.1% (13/24)
+
+This sets a baseline performance and highlights challenges when predicting these labels: some labels are very similar
+- "right" can be ready but can also be acknowledge or reply_y which highlights intersection between labels
+- clarify ("right down there") and check ("right beside it") can be confused without punctuation
+
+
+Here is the reference used:
+
+acknowledge:
+    uh-huh
+    okay
+    right okay oops that was
+
+align:
+    okay
+    okay
+    okay
+
+check:
+    on the right-hand side roughly just
+    right down there
+    underneath the diamond mine
+
+clarify:
+    right beside it
+    above the carved stones
+    you're heading from the indian country to the gold mine but trying to avoid the gold rock so come down to the bottom of
+
+explain:
+    i've got a gallows to the left like d-- below the left
+    oh no i have got a gold mine but it's it's a it's a good bit below that
+    i said a graveyard
+
+instruct:
+    okay the start part is at the top left-hand corner
+    ehm you're coming the s-- for three inches down below that
+    you just go straight down underneath it
+
+query_w:
+    how far underneath the diamond mine
+    in a curve or a s-- tight angle
+    how far down do you want me to go
+
+query_yn:
+    do you have a diamond mine there
+    do you have a graveyard just along from the diamond mine
+    do you have carved stones
+
+ready:
+    well
+    right
+    right well
+
+reply_n:
+    no
+    no
+    no
+
+reply_w:
+    no i haven't got that
+    it's about an inch or so
+    no i don't have the ravine
+
+reply_y:
+    uh-huh
+    yeah right
+    uh-huh
+
+
+Here are the experiment logs
+
+Utterance: go down to the bottom half of the lake but ehm start straightening out as if you were going back to where you started but le-- leave about an inch between the path where you went round the lake and the path where you're coming out of it
+Guess: instruct
+Label: instruct
+
+Utterance: you want me to trace back my steps
+Guess: query_yn
+Label: check
+
+Utterance: no
+Guess: reply_n
+Label: reply_n
+
+Utterance: you've gone halfway round the lake
+Guess: clarify
+Label: align
+
+Utterance: right
+Guess: ready
+Label: reply_y
+
+Utterance: right
+Guess: reply_y
+Label: acknowledge
+
+Utterance: go down the sort of slightly flat side the the side that's about an inch of the lake f-- just follow that down
+Guess: instruct
+Label: instruct
+
+Utterance: i don't have a flat side
+Guess: explain
+Label: explain
+
+Utterance: oh dear
+Guess: ready
+Label: acknowledge
+
+Utterance: right okay
+Guess: ready
+Label: ready
+
+Utterance: right
+Guess: ready
+Label: ready
+
+Utterance: i'm at the bottom of the lake
+Guess: clarify
+Label: explain
+
+Utterance: you're at the bottom
+Guess: clarify
+Label: acknowledge
+
+Utterance: okay
+Guess: align
+Label: align
+
+Utterance: right
+Guess: ready
+Label: ready
+
+Utterance: well i'm
+Guess: acknowledge
+Label: explain
+
+Utterance: right
+Guess: ready
+Label: ready
+
+Utterance: keep progressing in that kind of line for about another inch and a half
+Guess: instruct
+Label: instruct
+
+Utterance: towards the left
+Guess: clarify
+Label: check
+
+Utterance: yes
+Guess: reply_y
+Label: reply_y
+
+Utterance: right okay
+Guess: acknowledge
+Label: acknowledge
+
+Utterance: right
+Guess: ready
+Label: acknowledge
+
+Utterance: now
+Guess: ready
+Label: ready
+
+Utterance: when you've done that you should be ehm about equal with where you started going round the lake but about an inch and a half down from there
+Guess: check
+Label: align
