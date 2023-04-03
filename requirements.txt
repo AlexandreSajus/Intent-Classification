@@ -7,3 +7,6 @@ tensorflow==2.4.0
 torch
 matplotlib
 ipykernel
+transformers
+evaluate
+scikit-learn
