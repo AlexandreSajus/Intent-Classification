@@ -31,7 +31,7 @@ The dataset has 12 labels:
 The label distribution is not too imbalanced which means that accuracy is still a useful metric to use. We will also use confusion matrixes to make sure that some labels are not forgotten by our models.
 
 <p align="center">
-  <img src="media/label_distrib.png" alt="Label Distribution" width="50%"/>
+  <img src="media/label_distrib.png" alt="Label Distribution" width="70%"/>
 </p>
 
 ## Human Level Performance
@@ -80,7 +80,7 @@ _________________________________________________________________
 Training for 20 epochs results in the following accuracy plots:
 
 <p align="center">
-  <img src="media/LSTM_train.png" alt="LSTM Train" width="50%"/>
+  <img src="media/LSTM_train.png" alt="LSTM Train" width="70%"/>
 </p>
 
 We see that even with Dropout, the model suffers from overfitting.
@@ -90,6 +90,6 @@ We see that even with Dropout, the model suffers from overfitting.
 Which beats the human baseline and has the following confusion matrix:
 
 <p align="center">
-  <img src="media/LSTM_confusion.png" alt="LSTM Confusion" width="50%"/>
+  <img src="media/LSTM_confusion.png" alt="LSTM Confusion" width="70%"/>
 </p>
 
