@@ -6,7 +6,7 @@ A benchmark of different approaches on the task of Intent Classification on the 
 | --------------------- | ---------------- | ------------------------------- |
 | Human                 | Manual Labelling | 54.1%                           |
 | Training from Scratch | LSTM             | 61.0%                           |
-| Fine-Tuning           | BERT             | 49.7%                           |
+| Fine-Tuning           | BERT             | 63.4%                           |
 | Prompting             | GPT-4            | *Not Yet Implemented*           |
 
 ## Dataset
@@ -51,7 +51,6 @@ This sets a baseline performance and highlights challenges when predicting these
 In this part we train a simple LSTM model on the task:
 
 ```
-Model: "sequential"
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #   
 =================================================================
@@ -102,45 +101,50 @@ As expected from the HLP experiment, the model makes most of its mistakes on lab
 In this part, we fine-tune a BERT model on this classification task:
 
 ```
-Model: "model"
 __________________________________________________________________________________________________
-Layer (type)                    Output Shape         Param #     Connected to                     
+ Layer (type)                   Output Shape         Param #     Connected to                     
 ==================================================================================================
-input_ids (InputLayer)          [(None, 124)]        0                                            
-__________________________________________________________________________________________________
-attention_mask (InputLayer)     [(None, 124)]        0                                            
-__________________________________________________________________________________________________
-tf_bert_model (TFBertModel)     TFBaseModelOutputWit 108310272   input_ids[0][0]                  
-                                                                 attention_mask[0][0]             
-__________________________________________________________________________________________________
-global_max_pooling1d (GlobalMax (None, 768)          0           tf_bert_model[0][0]              
-__________________________________________________________________________________________________
-dense (Dense)                   (None, 256)          196864      global_max_pooling1d[0][0]       
-__________________________________________________________________________________________________
-dropout_37 (Dropout)            (None, 256)          0           dense[0][0]                      
-__________________________________________________________________________________________________
-dense_1 (Dense)                 (None, 12)           3084        dropout_37[0][0]                 
+ input_ids (InputLayer)         [(None, 124)]        0           []                               
+                                                                                                  
+ attention_mask (InputLayer)    [(None, 124)]        0           []                               
+                                                                                                  
+ tf_bert_model (TFBertModel)    TFBaseModelOutputWi  108310272   ['input_ids[0][0]',              
+                                thPoolingAndCrossAt               'attention_mask[0][0]']         
+                                tentions(last_hidde                                               
+                                n_state=(None, 124,                                               
+                                 768),                                                            
+                                 pooler_output=(Non                                               
+                                e, 768),                                                          
+                                 past_key_values=No                                               
+                                ne, hidden_states=N                                               
+                                one, attentions=Non                                               
+                                e, cross_attentions                                               
+                                =None)                                                            
+                                                                                                  
+ global_max_pooling1d (GlobalMa  (None, 768)         0           ['tf_bert_model[0][0]']          
+ xPooling1D)                                                                                      
+                                                                                                  
+ dense (Dense)                  (None, 256)          196864      ['global_max_pooling1d[0][0]']   
+                                                                                                  
+ dropout_37 (Dropout)           (None, 256)          0           ['dense[0][0]']                  
+                                                                                                  
+ dense_1 (Dense)                (None, 12)           3084        ['dropout_37[0][0]']             
+                                                                                                  
 ==================================================================================================
 Total params: 108,510,220
-Trainable params: 199,948
-Non-trainable params: 108,310,272
+Trainable params: 108,510,220
+Non-trainable params: 0
 __________________________________________________________________________________________________
 ```
 
-Training for 20 epochs results in the following accuracy plot:
+The model takes much longer to train and takes a lot of GPU memory, but results converge at only 5 epochs.
+
+**The best BERT model results in a 63.4% test accuracy**
+
+Which is better than both the human baseline and the LSTM model. The confusion matrix is as follows:
 
 <p align="center">
-  <img src="media/BERT_vs_LSTM.png" alt="BERT vs LSTM" width="70%"/>
+  <img src="media/BERT_confusion_unfrozen.png" alt="BERT Confusion" width="70%"/>
 </p>
 
-Here we see that fine-tuning BERT is not adapted to this task as it under-performs compared to LSTM.
-
-**The best BERT model results in a 49.7% test accuracy**
-
-Which is slightly under the human baseline and has the following confusion matrix:
-
-<p align="center">
-  <img src="media/BERT_confusion.png" alt="BERT Confusion" width="70%"/>
-</p>
-
-Here we see that fine-tuning BERT struggles with the amount of different labels. The model predicts many instances as `instruct` which is fine when confused with `clarify` as they are similar classes; but is not fine when confused with `query_w` as an instruction and a question should not be similar.
+Here we see very similar results to the LSTM model, with the same mistakes being made.
