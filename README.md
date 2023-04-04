@@ -80,7 +80,7 @@ _________________________________________________________________
 Training for 20 epochs results in the following accuracy plots:
 
 <p align="center">
-  <img src="media/LSTM_train.png" alt="LSTM Train" width="70%"/>
+  <img src="media/LSTM_train_big.png" alt="LSTM Train" width="70%"/>
 </p>
 
 We see that even with Dropout, the model suffers from overfitting.
