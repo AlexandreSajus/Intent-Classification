@@ -131,3 +131,5 @@ dmypy.json
 # Custom
 test_tf.py
 test_torch.py
+wandb/
+logs/

@@ -10,3 +10,4 @@ ipykernel
 transformers
 evaluate
 scikit-learn
+seaborn
