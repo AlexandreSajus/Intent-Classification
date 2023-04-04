@@ -11,3 +11,5 @@ transformers
 evaluate
 scikit-learn
 seaborn
+requests
+json
