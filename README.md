@@ -93,3 +93,6 @@ Which beats the human baseline and has the following confusion matrix:
   <img src="media/LSTM_confusion.png" alt="LSTM Confusion" width="70%"/>
 </p>
 
+As expected from the HLP experiment, the model makes most of its mistakes on labels that are very similar even for a human:
+- `ready` and `acknowledge`
+- `check` and `clarify`
