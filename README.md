@@ -2,12 +2,21 @@
 
 A benchmark of different approaches on the task of Intent Classification on the [Hugging Face Silicone Maptask dataset](https://huggingface.co/datasets/silicone/viewer/maptask/train):
 
-| **Approach**          | **Model**        | **Performance (Test Accuracy)** |
-| --------------------- | ---------------- | ------------------------------- |
-| Human                 | Manual Labelling | 54.1%                           |
-| Training from Scratch | LSTM             | 61.0%                           |
-| Fine-Tuning           | BERT             | 63.4%                           |
-| Prompting             | GPT-4            | *Not Yet Implemented*           |
+| **Approach**          | **Model**        | **Performance (Test Accuracy)** | Pros                                | Cons                      |
+| --------------------- | ---------------- | ------------------------------- | ----------------------------------- | ------------------------- |
+| Human                 | Manual Labelling | 54.1%                           | Generally correct                   | Takes time                |
+| Training from Scratch | LSTM             | 61.0%                           | Low resource cost                   | Not the best model        |
+| Fine-Tuning           | BERT             | 63.4%                           | Best model                          | High resource cost        |
+| Prompting             | GPT-4            | 43.3%                           | Automated with no training required | Expensive, Low perfomance |
+
+## Table of Contents
+
+- [**Dataset**](#dataset)
+- [**Human Level Performance**](#human-level-performance)
+- [**Training from Scratch (LSTM)**](#training-from-scratch-lstm)
+- [**Fine-Tuning (BERT)**](#fine-tuning-bert)
+- [**Prompting (GPT-4)**](#prompting-gpt-4)
+
 
 ## Dataset
 
@@ -148,3 +157,53 @@ Which is better than both the human baseline and the LSTM model. The confusion m
 </p>
 
 Here we see very similar results to the LSTM model, with the same mistakes being made.
+
+## Prompting (GPT-4)
+
+In this part we take a completely different approach and simply prompt GPT-4 on the task by giving him a few labelled examples and asking him to annotate a batch of test data.
+
+We do this by giving him this first prompt with 5 example sentences per label so it understands the task at hand:
+
+```
+Your job is to classify sentences according to 12 categories: 
+acknowledge, align, check, clarify, explain, instruct, query_w, query_yn, ready, reply_n, reply_w, reply_y
+
+Here are some examples for each label:
+acknowledge: uh-huh
+align: okay
+check: on the right-hand side roughly just
+clarify: right beside it
+explain: i've got a gallows to the left like d-- below the left
+...
+```
+
+We then ask him to classify a batch of test sentences and gather its predictions:
+
+```
+Now classify the following sentences:
+0. start at the extinct volcano
+1. go down around the tribal settlement and then
+2. whereabouts is the tribal settlement
+3. it's at the bottom it's to the left of the e-- extinct volcano
+4. right
+5. how far
+6. ehm at the opposite side
+7. to the opposite side
+```
+
+**Prompting GPT-4 results in a 43.3% test accuracy**
+
+This underperforms all of our previous models but is still impressive considering:
+- This method required no training
+- GPT-4 does not have access to the full training dataset
+- GPT-4 is not made to be a classifier
+
+The predictions have the following confusion matrix:
+
+<p align="center">
+  <img src="media/GPT4_confusion.png" alt="GPT4 Confusion" width="70%"/>
+</p>
+
+GPT-4 does expected mistakes like confusing `ready` and `acknowledge` but also unexpected ones like failing to annotate `reply_w` sentences.
+
+Note: `align` was not present in the test dataset since we sampled only 120 test sentences for budget purposes (this experiment cost about 0.50$)
