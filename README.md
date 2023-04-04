@@ -1,6 +1,6 @@
 # Intent Classification
 
-A benchmark of different approaches on the task of Intent Classification on the Hugging Face Silicone Maptask dataset:
+A benchmark of different approaches on the task of Intent Classification on the [Hugging Face Silicone Maptask dataset](https://huggingface.co/datasets/silicone/viewer/maptask/train):
 
 | **Approach**          | **Model**        | **Performance (Test Accuracy)** |
 | --------------------- | ---------------- | ------------------------------- |
