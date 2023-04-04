@@ -6,7 +6,7 @@ A benchmark of different approaches on the task of Intent Classification on the 
 | --------------------- | ---------------- | ------------------------------- |
 | Human                 | Manual Labelling | 54.1%                           |
 | Training from Scratch | LSTM             | 61.0%                           |
-| Fine-Tuning           | BERT             | *Not Yet Implemented*           |
+| Fine-Tuning           | BERT             | 49.7%                           |
 | Prompting             | GPT-4            | *Not Yet Implemented*           |
 
 ## Dataset
@@ -46,7 +46,7 @@ This sets a baseline performance and highlights challenges when predicting these
 - "right" can be ready but can also be acknowledge or reply_y which highlights intersection between labels
 - clarify ("right down there") and check ("right beside it") can be confused without punctuation
 
-## LSTM
+## Training from Scratch (LSTM)
 
 In this part we train a simple LSTM model on the task:
 
@@ -77,7 +77,7 @@ Non-trainable params: 0
 _________________________________________________________________
 ```
 
-Training for 20 epochs results in the following accuracy plots:
+Training for 20 epochs results in the following accuracy plot:
 
 <p align="center">
   <img src="media/LSTM_train_big.png" alt="LSTM Train" width="70%"/>
@@ -85,7 +85,7 @@ Training for 20 epochs results in the following accuracy plots:
 
 We see that even with Dropout, the model suffers from overfitting.
 
-**The best model results in a 61.0% test accuracy**
+**The best LSTM model results in a 61.0% test accuracy**
 
 Which beats the human baseline and has the following confusion matrix:
 
@@ -96,3 +96,51 @@ Which beats the human baseline and has the following confusion matrix:
 As expected from the HLP experiment, the model makes most of its mistakes on labels that are very similar even for a human:
 - `ready` and `acknowledge`
 - `check` and `clarify`
+
+## Fine-Tuning (BERT)
+
+In this part, we fine-tune a BERT model on this classification task:
+
+```
+Model: "model"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_ids (InputLayer)          [(None, 124)]        0                                            
+__________________________________________________________________________________________________
+attention_mask (InputLayer)     [(None, 124)]        0                                            
+__________________________________________________________________________________________________
+tf_bert_model (TFBertModel)     TFBaseModelOutputWit 108310272   input_ids[0][0]                  
+                                                                 attention_mask[0][0]             
+__________________________________________________________________________________________________
+global_max_pooling1d (GlobalMax (None, 768)          0           tf_bert_model[0][0]              
+__________________________________________________________________________________________________
+dense (Dense)                   (None, 256)          196864      global_max_pooling1d[0][0]       
+__________________________________________________________________________________________________
+dropout_37 (Dropout)            (None, 256)          0           dense[0][0]                      
+__________________________________________________________________________________________________
+dense_1 (Dense)                 (None, 12)           3084        dropout_37[0][0]                 
+==================================================================================================
+Total params: 108,510,220
+Trainable params: 199,948
+Non-trainable params: 108,310,272
+__________________________________________________________________________________________________
+```
+
+Training for 20 epochs results in the following accuracy plot:
+
+<p align="center">
+  <img src="media/BERT_vs_LSTM.png" alt="BERT vs LSTM" width="70%"/>
+</p>
+
+Here we see that fine-tuning BERT is not adapted to this task as it under-performs compared to LSTM.
+
+**The best BERT model results in a 49.7% test accuracy**
+
+Which is slightly under the human baseline and has the following confusion matrix:
+
+<p align="center">
+  <img src="media/BERT_confusion.png" alt="BERT Confusion" width="70%"/>
+</p>
+
+Here we see that fine-tuning BERT struggles with the amount of different labels. The model predicts many instances as `instruct` which is fine when confused with `clarify` as they are similar classes; but is not fine when confused with `query_w` as an instruction and a question should not be similar.
